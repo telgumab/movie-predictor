@@ -27,11 +27,15 @@ try:
     with col2:
         vote_count = st.number_input("Expected Vote Count Metrics:", min_value=0, max_value=50000, value=1200)
 
-    # 4. Process Prediction Actions (UPDATED WITH PANDAS DATAFRAME DETECTED LABELS)
+    # 4. Process Prediction Actions
     if st.button("Calculate Predictive Analysis", type="primary"):
-        # We use pd.DataFrame matching your exact original dataset feature columns ('id' and 'vote_count')
-        input_data = pd.DataFrame([[movie_id, vote_count]], columns=['id', 'vote_count'])
+        # Create raw matrix format
+        input_data = np.array([[movie_id, vote_count]])
         
+        # BYPASS STRATEGY: Strip internal feature names from the model object to prevent a mismatch error
+        if hasattr(model, 'feature_names_in_'):
+            delattr(model, 'feature_names_in_')
+            
         # Run calculation
         prediction = model.predict(input_data)[0]
         st.success(f"📊 Predicted Vote Average Rating Score: **{prediction:.2f} / 10**")
