@@ -27,12 +27,13 @@ try:
     with col2:
         vote_count = st.number_input("Expected Vote Count Metrics:", min_value=0, max_value=50000, value=1200)
 
-    # 4. Process Prediction Actions
+    # 4. Process Prediction Actions (UPDATED WITH PANDAS DATAFRAME DETECTED LABELS)
     if st.button("Calculate Predictive Analysis", type="primary"):
-        # Match input formatting shape exactly with what our model expects
-        input_features = np.array([[movie_id, vote_count]])
-        prediction = model.predict(input_features)[0]
+        # We use pd.DataFrame matching your exact original dataset feature columns ('id' and 'vote_count')
+        input_data = pd.DataFrame([[movie_id, vote_count]], columns=['id', 'vote_count'])
         
+        # Run calculation
+        prediction = model.predict(input_data)[0]
         st.success(f"📊 Predicted Vote Average Rating Score: **{prediction:.2f} / 10**")
         
         # Add a helpful validation display bar
